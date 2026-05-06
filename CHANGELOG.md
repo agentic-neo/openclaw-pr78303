@@ -6,6 +6,7 @@ Docs: https://docs.openclaw.ai
 
 ### Changes
 
+- MCP/approvals: gate bundle-MCP tool calls through the existing plugin-approval pipeline when an MCP server returns a standard consent envelope (`{ok: false, requires_confirmation: true, action_id, summary}`). The `action_id` is redacted from the model's view; the user replies `/approve <id> allow-once|allow-always|deny` on the trusted channel and OpenClaw re-calls the tool with `confirmation_token = action_id`. Servers that don't return the envelope are unaffected. Reuses the same channel-auth, ID-prefix routing, and reply parser already used for shell-exec approvals. Disable per-deployment with `mcp.approvals.enabled: false`. Thanks @oalterg.
 - Telegram: preserve the channel-specific 10-option poll cap in the unified outbound adapter so over-limit polls are rejected before send. (#78762) Thanks @obviyus.
 - Runtime/install: raise the supported Node 22 floor to `22.16+` so native SQLite query handling can rely on the `node:sqlite` statement metadata API while continuing to recommend Node 24. (#78921)
 - Discord/voice: stream ElevenLabs TTS directly into Discord playback and send ElevenLabs latency optimization as the documented query parameter so spoken replies can start sooner.
